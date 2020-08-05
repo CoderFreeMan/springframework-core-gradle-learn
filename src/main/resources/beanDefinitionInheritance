@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        bean 定义继承：
+            parent 属性指定后可继承父bean属性或覆盖父bean属性
+    -->
+    <bean id="inheritedTestBean"
+          abstract="true"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+        <property name="age" value="20"/>
+    </bean>
+
+    <bean id="inheritsWithDifferentClass"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI"
+          parent="inheritedTestBean">
+        <property name="age" value="28"/>
+        <property name="code" value="2"/>
+    </bean>
+</beans>

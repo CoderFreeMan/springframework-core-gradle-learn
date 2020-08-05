@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="constructorBaseDI"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI">
+        <constructor-arg ref="serviceA"/>
+        <constructor-arg ref="serviceB"/>
+    </bean>
+
+    <bean id="constructorBaseDIType"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI">
+        <constructor-arg type="int" value="1024"/>
+        <constructor-arg type="java.lang.String" value="幂"/>
+    </bean>
+
+    <bean id="constructorBaseDIIndex"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI">
+        <constructor-arg index="0" value="2048"/>
+        <constructor-arg index="1" value="幂次"/>
+    </bean>
+
+    <bean id="constructorBaseDIName"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI">
+        <constructor-arg name="code" value="4096"/>
+        <constructor-arg name="desc" value="高幂次"/>
+    </bean>
+
+    <bean id="serviceA"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+    </bean>
+
+    <bean id="serviceB"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceB">
+    </bean>
+
+
+    <!--引用外部bean-->
+    <!--<bean id="serviceA"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+    </bean>
+    <bean id="serviceB"
+          class="org.springframework.aop.framework.ProxyFactory">
+        <property name="target">
+            <ref parent="serviceA"/>
+        </property>
+    </bean>-->
+
+
+    <!-- inner bean -->
+    <bean id="innerBean"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI">
+        <property name="serviceA">
+            <bean class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+                <property name="age" value="28"/><!-- 要有 setter 方法 -->
+                <property name="name" value="Mr.yang"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Collections -->
+    <bean id="collection"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+        <!-- java.util.Properties -->
+        <property name="adminEmails">
+            <props>
+                <prop key="administrator">administrator@example.org</prop>
+                <prop key="support">support@example.org</prop>
+                <prop key="development">development@example.org</prop>
+            </props>
+        </property>
+        <!-- java.util.List -->
+        <property name="someList">
+            <list>
+                <value>a list element followed by a reference</value>
+                <value>1024</value>
+            </list>
+        </property>
+        <!-- java.util.Map -->
+        <property name="someMap">
+            <map>
+                <entry key="an entry" value="just some string"/>
+                <entry key="a ref" value-ref="serviceA"/>
+            </map>
+        </property>
+        <!-- java.util.Set -->
+        <property name="someSet">
+            <set>
+                <value>just some string</value>
+                <ref bean="serviceA"/>
+            </set>
+        </property>
+    </bean>
+
+    <!-- collection merging(集合合并)
+        适用于 Properties、List、Map、Set
+        子项可以覆盖父项的值
+        不保证合并后的集合顺序
+        不同集合类型不能合并
+        注入泛型属性时，通过反射获得对象有关强制类型的泛型信息并进行类型转换
+    -->
+    <bean id="parent"
+          abstract="true"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+        <property name="adminEmails">
+            <props>
+                <prop key="administrator">administrator@example.com</prop>
+                <prop key="support">support@exampl.com</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="child" parent="parent">
+        <property name="adminEmails">
+            <props merge="true">
+                <prop key="sales">sales@example.com</prop>
+                <prop key="support">support@example.com.uk</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="stronglyCollection"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+        <property name="accounts">
+            <map>
+                <entry key="one" value="9.99"/>
+                <entry key="two" value="2.75"/>
+                <entry key="six" value=".398"/>
+            </map>
+        </property>
+    </bean>
+
+    <!-- "" 和 null -->
+    <bean id="emptyAndNull"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+        <property name="name" value=""/>
+        <property name="serviceB">
+            <null/>
+        </property>
+    </bean>
+
+    <!--
+        p-namespace 允许你使用 bean 的属性，而不是嵌套的 property 元素
+        具有 p-namespace 的 XML 简便写法
+     -->
+    <bean id="pNamespace"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+        <property name="name" value="Mr.yang"/>
+    </bean>
+    <bean id="pNamespace2"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA"
+          p:name="Mr.yang"/>
+
+    <bean name="classic"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+        <property name="name" value="Mr.yang"/>
+        <property name="serviceB" ref="serviceB"/>
+    </bean>
+    <bean name="modern"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA"
+          p:name="Mr.yang"
+          p:serviceB-ref="serviceB"/>
+
+    <!--
+        c-namespace 允许使用内联属性来配置构造函数，而不是嵌套 constructor-arg 元素
+        具有 c-namespace 的 XML 简便写法
+    -->
+    <bean id="c-classic"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI">
+        <constructor-arg name="serviceA" ref="serviceA"/>
+    </bean>
+    <bean id="c-modern"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI"
+          c:serviceA-ref="serviceA"/>
+    <bean id="c-modern-index"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI"
+          c:_1-ref="serviceB"/><!--  -->
+
+    <!--
+        复合属性
+        不能为 null，否则将引发 NPE
+    -->
+    <bean id="mixed"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI">
+        <property name="serviceA.name" value="Mr.yang"/>
+    </bean>
+
+    <!--
+        depends-on attribute
+        在初始化当前bean之前，显示强制初始化其依赖项
+    -->
+    <bean id="depends-on"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ConstructorBasedDI"
+          depends-on="serviceA, serviceB"/>
+
+    <!--
+        lazy initialized bean
+        默认ApplicationContext在初始化过程中积极创建和配置所有 singleton bean
+        启动初始化更容易发现配置错误
+        可以开启懒加载来关闭此默认行为
+        在首次请求时创建一个 bean 实例
+        当一个非懒加载的bean依赖懒加载的bean时，懒加载的bean会被创建
+        可以在 <beans default-lazy-init="true" /> 标签配置容器级别上的加载模式
+    -->
+    <bean id="lazy-initialize"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceB"
+          lazy-init="true"/>
+
+    <!--
+        Autowiring Collaborator(自动装配)
+        自动装配优点：
+                        自动装配可大大减少指定属性或构造函数参数的需要
+                        随着对象的更新，自动装配可以更新配置。例如：向类中添加依赖项
+        四种自动装配模式：
+                        no：默认值，无自动装配，必须由 ref 元素定义，对于大型系统，依赖项会更好控制和清晰
+                        byName：按照属性名称
+                        byType：按照类型
+                        constructor：类似于byType，构造函数参数
+        自动装配限制和缺点：
+                        显示依赖项property和constructor-arg配置始终会覆盖自动装配，无法自动装配简单属性，如 String 和 Classes，此限制是设计缺陷
+                        自动装配不如显示配置精确
+                        配置信息可能不适用于可能从spring容器生成文档的工具
+                        容器内的多个bean定义可能与要自动装配的setter方法或构造函数参数指定的类型匹配
+                            - 放弃自动装配，使用显示配置
+                            - 通过 autowire-candidate 属性设置来避免自动装配 bean 为 false
+                            - 将单个bean定义primary的<bean/>元素属性的，设置为主要候选对象
+                            - 通过基于注解的配置实现更细力度的控件
+    -->
+</beans>

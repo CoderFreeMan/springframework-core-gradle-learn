@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--
+bean scopes:
+    singleton：默认 scope，为每个 Spring IoC 容器定义单个对象实例的定义
+    prototype：将单个 bean 定义的作用域限定为任意数量的对象实例
+    request：将单个bean定义范围限定为单个HTTP请求的生命周期。每个HTTP请求都有一个单个bean定义后创建的bean实例
+    session：将单个bean定义的作用域限定为HTTP会话的生命周期
+    application：将单个bean定义的作用域限定为 ServletContext 的生命周期
+    websocket：将单个bean定义的作用域限定为WebSocket的生命周期
+-->
+    <!--
+        singleton scope:
+            仅管理一个 singleton bean 的共享实例，并且所有对该bean的请求都会由spring容器返回
+            spring IoC 容器将为该bean定义所定义的对象创建一个实例，然后存储在此类单例bean的缓存中，且后续请求和引用都返回缓存对象
+    -->
+    <bean id="singletonScopBean"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceB"
+          scope="singleton"/>
+
+    <!--
+        prototype scope:
+            每次请求该bean时都会创建一个新的bean实例
+            prototype scope 应用于所有有状态的Bean
+            singleton scope 应用于无状态的Bean
+            spring 不能管理 prototype scope bean 的完整生命周期
+            spring 容器将实例化、配置、组装对象交给客户端后无需对该实例进一步记录
+            客户端处理并释放bean对象资源(bean 后置处理器)
+            类似 Java new 创建对象，不通电是所有生命周期管理都必须由客户端来处理
+    -->
+    <bean id="prototypeScopeBean"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA"
+          scope="prototype"/>
+
+    <!--
+         Singleton Beans 中包含 Prototype-bean 依赖：
+         Prototype bean 实例化一个新的 bean，然后注入到 singleton bean 中
+         假设 singleton bean在运行时系统重复获取Prototype bean的新实例，则不能这样使用，解决方法：方法注入
+    -->
+
+    <!--
+        request,session, application, websocket scopes
+            @TODO
+    -->
+
+    <!--
+        自定义 scope
+        实现 org.springframework.beans.factory.config.Scop 接口
+        通过 ConfigurableBeanFactory 接口的 registerScope() 方法注册
+        然后就可以使用了
+    -->
+
+</beans>

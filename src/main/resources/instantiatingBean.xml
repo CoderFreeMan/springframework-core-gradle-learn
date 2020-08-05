@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 构造方法实例化 Bean -->
+    <bean id="constructorBean"
+          class="com.practice.sprngframework.core.ioc.instantiatingbeans.ConstructorBean">
+    </bean>
+
+    <!-- 静态工厂方法实例化 Bean -->
+    <bean id="staticFactoryMethodBean"
+          class="com.practice.sprngframework.core.ioc.instantiatingbeans.StaticFactoryMethodBean"
+          factory-method="createInstance">
+    </bean>
+
+    <!-- 实例工厂方法实例化 Bean -->
+    <bean id="serviceLocator"
+          class="com.practice.sprngframework.core.ioc.instantiatingbeans.DefaultServiceLocator">
+    </bean>
+    <bean id="instanceFactoryMethodBean"
+          factory-bean="serviceLocator"
+          factory-method="createInstanceFactoryMethodBean">
+    </bean>
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--引用外部bean-->
+    <!--<bean id="serviceA"
+          class="com.practice.sprngframework.core.ioc.dependencies.di.ServiceA">
+    </bean>
+    <bean id="serviceB"
+          class="org.springframework.aop.framework.ProxyFactory">
+        <property name="target">
+            <ref parent="serviceA"/>
+        </property>
+    </bean>-->
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 从其它文件中加载 bean 定义 -->
+    <import resource="dao.xml"></import>
+
+    <!-- services -->
+    <!-- bean 的定义格式由属性和元素组成，
+         像 id、name 称为属性
+         像 property、constructor-arg 称为元素
+         id：bean 的全局唯一标识(若不指定会生成默认 id)
+         name：bean 的名称，可以指定多个名称，全局不唯一
+         scope：bean 的作用域，默认为 singleton
+         autowire：自动装配，默认为 no
+         lazy-init：是否延迟加载 bean，默认值为 false
+         class：类全路径
+
+         constructor-arg：指定构造函数参数
+         property：指定多个属性，对应 JavaBean 的 setter 方法
+         -->
+    <bean id="petStoreService"
+          name="petStore, petStoreServiceName"
+          scope="singleton"
+          autowire="no"
+          lazy-init="false"
+          class="com.practice.sprngframework.core.ioc.service.impl.PetStoreServiceImpl">
+        <constructor-arg name="accountDAO" ref="accountDAO"></constructor-arg>
+        <property name="accountDAO" ref="accountDAO"></property>
+    </bean>
+
+    <!--<bean id="accountDAO" class="com.practice.sprngframework.core.ioc.dao.AccountDAO">
+    </bean>-->
+</beans>
